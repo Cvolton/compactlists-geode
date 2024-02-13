@@ -1,0 +1,28 @@
+{
+	"geode": "2.0.0",
+	"version": "v1.0.0",
+	"gd": {
+        "win": "2.204",
+        "android": "2.205",
+        "mac": "2.200"
+    },
+	"id": "cvolton.compact_lists",
+	"name": "Compact Lists",
+	"developer": "Cvolton",
+	"description": "Makes level cells smaller",
+    "dependencies": [
+        {
+            "id": "geode.node-ids",
+            "version": "v1.1.3",
+            "importance": "recommended"
+        }
+    ],
+	"settings": {
+        "enable-compact-lists": {
+            "name": "Enable compact lists",
+            "description": "Whether the mod should do anything at all",
+            "type": "bool",
+            "default": true
+        }
+	}
+}
