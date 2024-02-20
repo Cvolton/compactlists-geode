@@ -10,6 +10,7 @@
 	"name": "Compact Lists",
 	"developer": "Cvolton",
 	"description": "Makes level cells smaller",
+    "repository": "https://github.com/Cvolton/compactlists-geode",
     "dependencies": [
         {
             "id": "geode.node-ids",
