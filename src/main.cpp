@@ -137,7 +137,9 @@ class $modify(LevelCell) {
 };
 
 class $modify(CLLevelBrowserLayer, LevelBrowserLayer) {
-	CCSprite* m_compactButton = nullptr;
+	struct Fields {
+		CCSprite* m_compactButton = nullptr;
+	};
 
 	void onCompactListToggle(CCObject* sender) {
 		Mod::get()->setSettingValue("enable-compact-lists", !Mod::get()->getSettingValue<bool>("enable-compact-lists"));
