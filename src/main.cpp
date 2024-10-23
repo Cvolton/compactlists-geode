@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CustomListView.hpp>
 #include <Geode/modify/LevelBrowserLayer.hpp>
+#include <Geode/modify/LevelListLayer.hpp>
 #include <Geode/modify/LevelCell.hpp>
 
 using namespace geode::prelude;
@@ -190,5 +191,15 @@ class $modify(CLLevelBrowserLayer, LevelBrowserLayer) {
 		}
 
 		return true;
+	}
+};
+
+class $modify(LevelListLayer) {
+	void onBack(CCObject* sender) {
+		for(auto level : CCArrayExt<GJGameLevel*>(m_list->m_listView->m_entries)) {
+			level->m_listPosition = 0;
+		}
+
+		LevelListLayer::onBack(sender);
 	}
 };
