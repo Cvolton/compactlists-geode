@@ -111,7 +111,7 @@ class $modify(LevelCell) {
 	void loadCustomLevelCell() {
 		LevelCell::loadCustomLevelCell();
 
-		if(m_compactView && m_level->m_unkInt == 0) {
+		if(m_compactView && m_level->m_listPosition == 0) {
 			if(auto label = m_mainLayer->getChildByID("level-place")) {
 				label->setVisible(false);
 
