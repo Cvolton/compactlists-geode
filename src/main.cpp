@@ -138,7 +138,7 @@ class $modify(LevelCell) {
 
 class $modify(CLLevelBrowserLayer, LevelBrowserLayer) {
 	struct Fields {
-		CCSprite* m_compactButton = nullptr;
+		Ref<CCSprite> m_compactButton = nullptr;
 	};
 
 	void onCompactListToggle(CCObject* sender) {
