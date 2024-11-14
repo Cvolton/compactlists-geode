@@ -1,16 +1,18 @@
 {
-	"geode": "3.8.1",
-	"version": "v1.1.1",
+	"geode": "4.0.0-alpha.1",
+	"version": "v1.2.0-beta.1",
 	"gd": {
-        "win": "2.206",
-        "android": "2.206",
-        "mac": "2.206"
+        "win": "2.2074",
+        "android": "2.2074",
+        "mac": "2.2074"
     },
 	"id": "cvolton.compact_lists",
 	"name": "Compact Lists",
 	"developer": "Cvolton",
 	"description": "Makes level cells smaller",
-    "repository": "https://github.com/Cvolton/compactlists-geode",
+	"links": {
+		"source": "https://github.com/Cvolton/compactlists-geode"
+	},
     "dependencies": [
         {
             "id": "geode.node-ids",
