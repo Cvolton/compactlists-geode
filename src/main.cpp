@@ -27,7 +27,7 @@ class $modify(CustomListView) {
 
 class $modify(LevelCell) {
 	static void onModify(auto& self) {
-        if (!self.setHookPriority("LevelCell::loadCustomLevelCell", 10000)) {
+        if (!self.setHookPriority("LevelCell::loadCustomLevelCell", Priority::EarlyPost)) {
             log::warn("Failed to set LevelCell::loadCustomLevelCell hook priority, compact lists may not work properly");
         }
     }
