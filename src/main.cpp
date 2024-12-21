@@ -184,6 +184,7 @@ class $modify(CLLevelBrowserLayer, LevelBrowserLayer) {
 				AxisLayoutOptions::create()
 					->setRelativeScale(.95f)
 			);
+			button->setID("compact-button"_spr);
 
 			setButtonColor();
 
