@@ -1,4 +1,8 @@
 # Changelog
+## v1.2.1 (2024-12-21)
+- Added a Node ID for the compact button
+- Fixed compact button showing up in non-level searches
+
 ## v1.2.0 (2024-11-15)
 - Updated for Geode v4.0.0-beta.1 and GD 2.207
 
