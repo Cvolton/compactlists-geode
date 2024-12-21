@@ -171,6 +171,7 @@ class $modify(CLLevelBrowserLayer, LevelBrowserLayer) {
 	bool init(GJSearchObject* obj) {
 		if(!LevelBrowserLayer::init(obj)) return false;
 		if(!Mod::get()->getSettingValue<bool>("show-toggle")) return true;
+		if(m_searchObject->m_searchMode != 0) return true;
 
 		if(auto menu = getChildByID("info-menu")) {
 			auto button = CCMenuItemSpriteExtra::create(
