@@ -1,4 +1,7 @@
 # Changelog
+## v1.2.2 (2025-06-22)
+- Added iOS support
+
 ## v1.2.1 (2024-12-21)
 - Added a Node ID for the compact button
 - Fixed compact button showing up in non-level searches
