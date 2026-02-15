@@ -1,4 +1,7 @@
 # Changelog
+## v1.3.2 (2026-02-15)
+- Non-Windows release
+
 ## v1.3.1 (2026-02-15)
 - Added `cvolton.compact_lists/skip-adjustment` user flag to LevelCells
   - This makes it possible for other mods to ask Compact Lists not to modify with cells they create
