@@ -1,4 +1,7 @@
 # Changelog
+## v1.3.0 (2026-02-15)
+- Updated for Geode v5.0.0 and GD 2.208
+
 ## v1.2.2 (2025-06-22)
 - Added iOS support
 

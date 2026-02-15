@@ -1,6 +1,6 @@
 {
-	"geode": "5.0.0-alpha.1",
-	"version": "v1.2.2",
+	"geode": "5.0.0-beta.1",
+	"version": "v1.3.0",
 	"gd": {
         "win": "2.2081",
         "android": "2.2074",
@@ -15,7 +15,7 @@
 		"source": "https://github.com/Cvolton/compactlists-geode"
 	},
     "dependencies": {
-        "geode.node-ids": ">=v1.17.0"
+        "geode.node-ids": ">=v1.22.0"
     },
 	"settings": {
         "enable-compact-lists": {
