@@ -4,6 +4,7 @@
 #include <Geode/modify/LevelBrowserLayer.hpp>
 #include <Geode/modify/LevelListLayer.hpp>
 #include <Geode/modify/LevelCell.hpp>
+#include <Geode/modify/GJCompactUserCell.hpp>
 
 using namespace geode::prelude;
 
@@ -29,7 +30,7 @@ class $modify(CustomListView) {
 
 class $modify(LevelCell) {
 	static void onModify(auto& self) {
-        if (!self.setHookPriority("LevelCell::loadCustomLevelCell", Priority::EarlyPost)) {
+        if (!self.setHookPriority("LevelCell::loadCustomLevelCell", Priority::LatePre)) {
             log::warn("Failed to set LevelCell::loadCustomLevelCell hook priority, compact lists may not work properly");
         }
     }
@@ -41,6 +42,83 @@ class $modify(LevelCell) {
 	void loadCustomLevelCell() {
 		m_compactNoIndex = m_level->m_listPosition == 0 && !this->getUserFlag("skip-adjustment"_spr);
 		LevelCell::loadCustomLevelCell();
+	}
+};
+
+class $modify(GJCompactUserCell) {
+	static void onModify(auto& self) {
+        if (!self.setHookPriority("GJCompactUserCell::loadFromScore", Priority::EarlyPost)) {
+            log::warn("Failed to set GJCompactUserCell::loadFromScore hook priority, compact lists may not work properly");
+        }
+    }
+
+	void addStat(const char* id, const char* texture, int value) {
+		if(auto menu = m_mainLayer->getChildByID("stats-menu")) {
+			auto label = Label::create(GameToolbox::intToShortString(value, true), "bigFont.fnt");
+
+			auto options = AxisLayoutOptions::create()
+				->setScaleLimits(.0f, 1.f)
+				->setRelativeScale(.4f);
+
+			label->setLayoutOptions(options);
+			label->setID(fmt::format("{}-label"_spr, id));
+			menu->addChild(label);
+
+			auto icon = CCSprite::createWithSpriteFrameName(texture);
+			auto iconOptions = AxisLayoutOptions::create()
+				->setScaleLimits(.0f, 1.f)
+				->setRelativeScale(.5f)
+				->setNextGap(8.f);
+			icon->setLayoutOptions(iconOptions);
+			menu->addChild(icon);
+
+			menu->updateLayout();
+		}
+
+	}
+
+	void moveToTheEnd(Ref<CCNode> node) {
+		if(!node) return;
+
+		auto parent = node->getParent();
+		if(!parent) return;
+
+		node->removeFromParent();
+		parent->addChild(node);
+	}
+
+	/**
+	 * Hooks
+	*/
+
+	void loadFromScore(GJUserScore* score) {
+		GJCompactUserCell::loadFromScore(score);
+
+		addStat("coins", "GJ_coinsIcon_001.png", score->m_secretCoins);
+		addStat("user-coins", "GJ_coinsIcon2_001.png", score->m_userCoins);
+		// nobody care about diamond imo
+
+		if(auto icon = m_mainLayer->getChildByID("player-icon")) {
+			icon->setPositionY(icon->getPositionY() + 5.75f);
+			icon->setScale(.7f);
+
+			auto rankLabel = Label::create(fmt::to_string(score->m_playerRank), "goldFont.fnt");
+			rankLabel->setID("rank-label"_spr);
+
+			rankLabel->setPosition(icon->getPosition());
+			rankLabel->setPositionY(rankLabel->getPositionY() - 17.f);
+			rankLabel->setScale(.45f);
+
+			m_mainLayer->addChild(rankLabel);
+		}
+
+		if(auto menu = m_mainLayer->getChildByID("stats-menu")) {
+			moveToTheEnd(menu->getChildByID("creator-points-label"));
+			moveToTheEnd(menu->getChildByID("creator-points-icon"));
+
+			menu->setContentSize({270.f, 60});
+			menu->updateLayout();
+		}
 	}
 };
 
