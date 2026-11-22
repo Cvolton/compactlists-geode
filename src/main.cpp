@@ -32,108 +32,13 @@ class $modify(LevelCell) {
         }
     }
 
-	void moveNextToCoins(CCNode* node) {
-		if(!node) return;
-
-		std::array<const char*, 4> candidates = {
-			"coin-icon-3",
-			"coin-icon-2",
-			"coin-icon-1",
-			"song-name"
-		};
-
-		CCNode* finalist = nullptr;
-
-		for(auto candidate : candidates) {
-			finalist = m_mainLayer->getChildByID(candidate);
-			
-			if(finalist) break;
-		}
-
-		if(!finalist) return;
-
-		node->setPositionX(finalist->getPositionX() + finalist->getScaledContentSize().width + 5 + node->getScaledContentSize().width / 2);
-		node->setPositionY(finalist->getPositionY());
-	}
-
-	void moveNextToCreator(CCNode* node) {
-		if(!node) return;
-
-		std::array<const char*, 2> candidates = {
-			"high-object-indicator",
-			"copy-indicator"
-		};
-
-		CCNode* finalist = nullptr;
-
-		for(auto candidate : candidates) {
-			finalist = m_mainLayer->getChildByID(candidate);
-			
-			if(finalist) break;
-		}
-
-		if(finalist) {
-			node->setPositionX(finalist->getPositionX() + finalist->getScaledContentSize().width + 5 + node->getScaledContentSize().width / 2);
-			node->setPositionY(finalist->getPositionY());
-		} else {
-			auto levelName = m_mainLayer->getChildByID("level-name");
-			if(!levelName) return;
-
-			auto menu = m_mainLayer->getChildByID("main-menu");
-			if(!menu) return;
-
-			auto creatorName = menu->getChildByID("creator-name");
-			if(!creatorName) return;
-
-			node->setPositionX(levelName->getPositionX() + levelName->getScaledContentSize().width + 5 + creatorName->getScaledContentSize().width + 5 + node->getScaledContentSize().width / 2);
-			node->setPositionY(levelName->getPositionY());
-		}
-
-	}
-
-	void moveNextToView(CCNode* node) {
-		if(!node) return;
-
-		auto viewButton = m_mainMenu->getChildByID("view-button");
-		if(!viewButton) return;
-
-		/*node->setPositionX(viewButton->getPositionX() - viewButton->getScaledContentSize().width - 5 - node->getScaledContentSize().width / 2);
-		node->setPositionY(viewButton->getPositionY());
-
-		node->setPosition(m_mainLayer->convertToNodeSpace(m_mainMenu->convertToWorldSpace(node->getPosition())));*/
-		node->setPosition({276, 25});
-		//node->setPosition({276 - (node->getScaledContentSize().width / 2), 25});
-	}
-
 	/**
 	 * Hooks
 	*/
 
 	void loadCustomLevelCell() {
+		m_compactNoIndex = m_level->m_listPosition == 0 && !this->getUserFlag("skip-adjustment"_spr);
 		LevelCell::loadCustomLevelCell();
-
-		if(m_compactView && m_level->m_listPosition == 0 && !this->getUserFlag("skip-adjustment"_spr)) {
-			if(auto label = m_mainLayer->getChildByID("level-place")) {
-				label->setVisible(false);
-
-				for(auto child : CCArrayExt<CCNode*>(m_mainLayer->getChildren())) {
-					if(child->getID() != "main-menu") {
-						child->setPositionX(child->getPositionX() - 20);
-					}
-				}
-
-				if(auto menu = m_mainLayer->getChildByID("main-menu")) {
-					for(auto child : CCArrayExt<CCNode*>(menu->getChildren())) {
-						if(child->getID() != "view-button") {
-							child->setPositionX(child->getPositionX() - 20);
-						}
-					}
-				}
-
-				moveNextToView(m_mainLayer->getChildByID("completed-icon"));
-				moveNextToView(m_mainLayer->getChildByID("percentage-label"));
-			}
-		}
 	}
 };
 
