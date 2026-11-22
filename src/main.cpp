@@ -159,18 +159,22 @@ class $modify(GJCompactUserCell) {
 		addStat("user-coins", "GJ_coinsIcon2_001.png", score->m_userCoins);
 		// nobody care about diamond imo
 
-		if(auto icon = m_mainLayer->getChildByID("player-icon")) {
-			icon->setPositionY(icon->getPositionY() + 5.75f);
-			icon->setScale(.7f);
+		if(score->m_playerRank > 0) {
 
-			auto rankLabel = Label::create(fmt::to_string(score->m_playerRank), "goldFont.fnt");
-			rankLabel->setID("rank-label"_spr);
+			if(auto icon = m_mainLayer->getChildByID("player-icon")) {
+				icon->setPositionY(icon->getPositionY() + 5.75f);
+				icon->setScale(.7f);
 
-			rankLabel->setPosition(icon->getPosition());
-			rankLabel->setPositionY(rankLabel->getPositionY() - 17.f);
-			rankLabel->setScale(.45f);
+				auto rankLabel = Label::create(fmt::to_string(score->m_playerRank), "goldFont.fnt");
+				rankLabel->setID("rank-label"_spr);
 
-			m_mainLayer->addChild(rankLabel);
+				rankLabel->setPosition(icon->getPosition());
+				rankLabel->setPositionY(rankLabel->getPositionY() - 17.f);
+				rankLabel->setScale(.45f);
+
+				m_mainLayer->addChild(rankLabel);
+			}
+
 		}
 
 		if(auto menu = m_mainLayer->getChildByID("stats-menu")) {
@@ -253,13 +257,30 @@ class $modify(CLLevelBrowserLayer, LevelBrowserLayer) {
 	};
 
 	void onCompactListToggle(CCObject* sender) {
-		Mod::get()->setSettingValue("enable-compact-lists", !Mod::get()->getSettingValue<bool>("enable-compact-lists"));
+		switch(m_searchObject->m_searchType) {
+			case SearchType::Users:
+				Mod::get()->setSettingValue("enable-compact-scores", !Mod::get()->getSettingValue<bool>("enable-compact-scores"));
+				break;
+			default:
+				Mod::get()->setSettingValue("enable-compact-lists", !Mod::get()->getSettingValue<bool>("enable-compact-lists"));
+				break;
+		}
+
 		loadPage(m_searchObject);
+	}
+
+	bool compactListEnabled() {
+		switch(m_searchObject->m_searchType) {
+			case SearchType::Users:
+				return Mod::get()->getSettingValue<bool>("enable-compact-scores");
+			default:
+				return Mod::get()->getSettingValue<bool>("enable-compact-lists");
+		}
 	}
 
 	void setButtonColor() {
 		if(m_fields->m_compactButton) {
-			m_fields->m_compactButton->setColor(Mod::get()->getSettingValue<bool>("enable-compact-lists") ? ccc3(255, 255, 255) : ccc3(125, 125, 125));
+			m_fields->m_compactButton->setColor(compactListEnabled() ? ccc3(255, 255, 255) : ccc3(125, 125, 125));
 		}
 	}
 
