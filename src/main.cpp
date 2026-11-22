@@ -44,6 +44,66 @@ class $modify(LevelCell) {
 	}
 };
 
+class $modify(CLLeaderboardsLayer, LeaderboardsLayer) {
+	struct Fields {
+		Ref<CCSprite> m_compactButton = nullptr;
+	};
+
+	void onCompactListToggle(CCObject* sender) {
+		Mod::get()->setSettingValue("enable-compact-scores", !Mod::get()->getSettingValue<bool>("enable-compact-scores"));
+
+		auto scene = LeaderboardsLayer::scene(m_type, m_stat);
+        CCDirector::sharedDirector()->replaceScene(scene);
+	}
+
+	void setButtonColor() {
+		if(m_fields->m_compactButton) {
+			m_fields->m_compactButton->setColor(Mod::get()->getSettingValue<bool>("enable-compact-scores") ? ccc3(255, 255, 255) : ccc3(125, 125, 125));
+		}
+	}
+
+	/**
+	 * Hooks
+	*/
+	/*void onEnter() {
+		LeaderboardsLayer::onEnter();
+
+		setButtonColor();
+	}*/
+
+	void setupLevelBrowser(CCArray* array) {
+		LeaderboardsLayer::setupLevelBrowser(array);
+
+		setButtonColor();
+	}
+
+	bool init(LeaderboardType type, LeaderboardStat stat) {
+		if(!LeaderboardsLayer::init(type, stat)) return false;
+		if(!Mod::get()->getSettingValue<bool>("show-toggle")) return true;
+
+		if(auto menu = getChildByID("info-menu")) {
+			auto button = CCMenuItemSpriteExtra::create(
+				m_fields->m_compactButton = CCSprite::createWithSpriteFrameName("GJ_smallModeIcon_001.png"),
+				this,
+				menu_selector(CLLeaderboardsLayer::onCompactListToggle)
+			);
+			button->setZOrder(-1);
+			button->setLayoutOptions(
+				AxisLayoutOptions::create()
+					->setRelativeScale(.95f)
+			);
+			button->setID("compact-button"_spr);
+
+			setButtonColor();
+
+			menu->addChild(button);
+			menu->updateLayout();
+		}
+
+		return true;
+	}
+};
+
 class $modify(CLLevelBrowserLayer, LevelBrowserLayer) {
 	struct Fields {
 		Ref<CCSprite> m_compactButton = nullptr;
