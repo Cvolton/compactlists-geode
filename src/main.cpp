@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CustomListView.hpp>
+#include <Geode/modify/LeaderboardsLayer.hpp>
 #include <Geode/modify/LevelBrowserLayer.hpp>
 #include <Geode/modify/LevelListLayer.hpp>
 #include <Geode/modify/LevelCell.hpp>
@@ -20,6 +21,7 @@ using namespace geode::prelude;
 class $modify(CustomListView) {
 	static CustomListView* create(cocos2d::CCArray* a, TableViewCellDelegate* b, float c, float d, int e, BoomListType f, float g) {
 		if(f == BoomListType::Level && Mod::get()->getSettingValue<bool>("enable-compact-lists")) f = BoomListType::Level4;
+		if(f == BoomListType::Score && Mod::get()->getSettingValue<bool>("enable-compact-scores")) f = BoomListType::CompactUser;
 
 		return CustomListView::create(a, b, c, d, e, f, g);
 	}

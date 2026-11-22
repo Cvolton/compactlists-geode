@@ -19,10 +19,16 @@
     },
 	"settings": {
         "enable-compact-lists": {
-            "name": "Enable compact lists",
-            "description": "Whether the mod should do anything at all",
+            "name": "Enable compact lists (level search)",
+            "description": "Whether the mod should do anything in level search",
             "type": "bool",
             "default": true
+        },
+        "enable-compact-scores": {
+            "name": "Enable compact lists (leaderboards)",
+            "description": "Whether the mod should do anything in leaderboards view",
+            "type": "bool",
+            "default": false
         },
         "show-toggle": {
             "name": "Show toggle in search",
