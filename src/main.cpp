@@ -19,12 +19,73 @@ using namespace geode::prelude;
 	} 
 };*/
 
-class $modify(CustomListView) {
-	static CustomListView* create(cocos2d::CCArray* a, TableViewCellDelegate* b, float c, float d, int e, BoomListType f, float g) {
-		if(f == BoomListType::Level && Mod::get()->getSettingValue<bool>("enable-compact-lists")) f = BoomListType::Level4;
-		if(f == BoomListType::Score && Mod::get()->getSettingValue<bool>("enable-compact-scores")) f = BoomListType::CompactUser;
+class $modify(CLCustomListView, CustomListView) {
+	struct Fields {
+		bool m_ours = false;
+	};
 
-		return CustomListView::create(a, b, c, d, e, f, g);
+	static inline bool s_creatingOurs = false;
+
+	void scrollToIndex(int index, bool clampToMaxY) {
+        if (m_entries->count() == 1) return;
+
+        float halfHeight = m_height * 0.5f;
+        if (static_cast<float>(index - 1) * m_itemSeparation <= halfHeight) return;
+
+        auto contentPos = m_tableView->m_contentLayer->getPosition();
+        float targetY = (static_cast<float>(index + 1) * m_itemSeparation - halfHeight - m_itemSeparation * 0.5f)
+                        + contentPos.y;
+
+        if (clampToMaxY) {
+            float maxY = m_tableView->getMaxY();
+            if (targetY > maxY) {
+                targetY = maxY;
+            }
+        }
+
+        m_tableView->setContentOffset({contentPos.x, targetY}, false);
+    };
+
+	/**
+	 * Hooks
+	 */
+
+	static CustomListView* create(cocos2d::CCArray* a, TableViewCellDelegate* b, float c, float d, int e, BoomListType f, float g) {
+		bool ours = false;
+		if(f == BoomListType::Level && Mod::get()->getSettingValue<bool>("enable-compact-lists")) {
+			f = BoomListType::Level4;
+			ours = true;
+		}
+		if(f == BoomListType::Score && Mod::get()->getSettingValue<bool>("enable-compact-scores")) {
+			f = BoomListType::CompactUser;
+			ours = true;
+		}
+
+		s_creatingOurs = ours;
+		auto ret = CustomListView::create(a, b, c, d, e, f, g);
+		static_cast<CLCustomListView*>(ret)->m_fields->m_ours = ours;
+		s_creatingOurs = false;
+
+		return ret;
+	}
+
+	void setupList(float yOffset) {
+		CustomListView::setupList(yOffset);
+
+		if(s_creatingOurs && m_type == BoomListType::CompactUser) {
+			int foundIndex = -1;
+            for (unsigned int i = 0; i < m_entries->count(); ++i) {
+                auto score = static_cast<GJUserScore*>(m_entries->objectAtIndex(i));
+                if (score->isCurrentUser()) {
+                    foundIndex = static_cast<int>(i);
+                    break;
+                }
+            }
+			
+            if (foundIndex != -1) {
+                scrollToIndex(foundIndex, false);
+            }
+		}
 	}
 };
 
@@ -118,6 +179,10 @@ class $modify(GJCompactUserCell) {
 
 			menu->setContentSize({270.f, 60});
 			menu->updateLayout();
+		}
+
+		if(score->isCurrentUser()) {
+			m_backgroundLayer->setColor({230, 150, 10});
 		}
 	}
 };
