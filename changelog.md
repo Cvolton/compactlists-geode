@@ -1,4 +1,8 @@
 # Changelog
+## v1.4.0 (2026-11-25)
+- Updated for Geode v6.0.0 and GD 2.209
+- Added Leaderboards support
+
 ## v1.3.2 (2026-02-15)
 - Non-Windows release
 
