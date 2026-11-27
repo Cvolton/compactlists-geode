@@ -1,4 +1,8 @@
 # Changelog
+## v1.4.1 (2026-11-27)
+- Added selection toggler to saved levels
+- Fixed daily level recalls not working with compact lists enabled
+
 ## v1.4.0 (2026-11-25)
 - Updated for Geode v6.0.0 and GD 2.209
 - Added Leaderboards support
