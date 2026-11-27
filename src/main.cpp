@@ -87,6 +87,15 @@ class $modify(CLCustomListView, CustomListView) {
             }
 		}
 	}
+
+	void reloadAll() {
+		auto originalType = m_type;
+		if (m_fields->m_ours && m_type == BoomListType::Level4) {
+			m_type = BoomListType::Level;
+		}
+		CustomListView::reloadAll();
+		m_type = originalType;
+	}
 };
 
 class $modify(LevelCell) {
@@ -113,6 +122,15 @@ class $modify(LevelCell) {
 			m_fields->m_ours = m_compactNoIndex = m_level->m_listPosition == 0 && !this->getUserFlag("skip-adjustment"_spr);
 		}
 		LevelCell::loadCustomLevelCell();
+
+		if(m_fields->m_ours && m_level->m_localOrSaved) {
+			if(auto viewBtn = m_mainMenu->getChildByID("view-button")) {
+				m_toggler = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(LevelCell::onToggle), 0.6f);
+				m_toggler->setPosition(viewBtn->getPosition() - CCPoint(42.f, 0.f));
+				m_toggler->toggle(m_level->m_selected);
+				m_mainMenu->addChild(m_toggler);
+			}
+		}
 	}
 
     void onClick(CCObject* sender) {
