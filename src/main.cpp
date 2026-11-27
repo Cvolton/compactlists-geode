@@ -90,9 +90,17 @@ class $modify(CLCustomListView, CustomListView) {
 };
 
 class $modify(LevelCell) {
+	struct Fields {
+		bool m_ours = false;
+	};
+
 	static void onModify(auto& self) {
         if (!self.setHookPriority("LevelCell::loadCustomLevelCell", Priority::LatePre)) {
             log::warn("Failed to set LevelCell::loadCustomLevelCell hook priority, compact lists may not work properly");
+        }
+
+        if (!self.setHookPriority("LevelCell::onClick", Priority::EarlyPre)) {
+            log::warn("Failed to set LevelCell::onClick hook priority, compact lists may not work properly");
         }
     }
 
@@ -101,9 +109,20 @@ class $modify(LevelCell) {
 	*/
 
 	void loadCustomLevelCell() {
-		m_compactNoIndex = m_level->m_listPosition == 0 && !this->getUserFlag("skip-adjustment"_spr);
+		if(m_listType == BoomListType::Level4) {
+			m_fields->m_ours = m_compactNoIndex = m_level->m_listPosition == 0 && !this->getUserFlag("skip-adjustment"_spr);
+		}
 		LevelCell::loadCustomLevelCell();
 	}
+
+    void onClick(CCObject* sender) {
+		auto originalType = m_listType;
+		if(m_fields->m_ours) {
+			m_listType = BoomListType::Level;
+		}
+        LevelCell::onClick(sender);
+        m_listType = originalType;
+    }
 };
 
 class $modify(GJCompactUserCell) {
